@@ -4,16 +4,20 @@ import { PersonalityType, Question } from "@/lib/testData";
 interface QuestionCardProps {
     question: Question;
     onAnswerSelect: (type: PersonalityType) => void;
+    onPreviousQuestion: () => void;
     questionNumber: number;
     totalQuestions: number;
+    isFirstQuestion: boolean;
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = (
     {
         question,
         onAnswerSelect,
+        onPreviousQuestion,
         questionNumber,
-        totalQuestions
+        totalQuestions,
+        isFirstQuestion
     }
 ) => {
     const getColorClasses = (type: PersonalityType) => {
@@ -128,14 +132,36 @@ const QuestionCard: React.FC<QuestionCardProps> = (
                     );
                 })}
             </div>
-            
-            <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                <p
-                    style={{
-                        fontFamily: "\"Noto Serif SC\", serif",
-                        fontSize: "16px"
-                    }}>请相信你的第一选择。<br />
-                    它不是冲动，而是你灵魂最自然的表达。🌿</p>
+             
+            <div className="flex items-center justify-between mt-8">
+                {/* 上一题按钮 */}
+                {!isFirstQuestion && (
+                    <motion.button
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={onPreviousQuestion}
+                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full flex items-center text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    >
+                        <i className="fas fa-arrow-left mr-2"></i> 上一题
+                    </motion.button>
+                )}
+                
+                {/* 提示文本 */}
+                <div className="text-center text-sm text-gray-500 dark:text-gray-400 flex-grow">
+                    <p
+                        style={{
+                            fontFamily: "\"Noto Serif SC\", serif",
+                            fontSize: "16px"
+                        }}>请相信你的第一选择。<br />
+                        它不是冲动，而是你灵魂最自然的表达。🌿</p>
+                </div>
+                
+                {/* 占位元素，保持布局平衡 */}
+                {!isFirstQuestion && (
+                    <div className="w-28"></div>
+                )}
             </div>
         </div>
     );
